@@ -1,0 +1,10 @@
+li {
+    list-style: none;
+    line-height: 23px;
+}
+
+.fileNode {
+    cursor: pointer;
+    border-left: 2px solid #ccc;
+    padding-left: 2px;
+}
