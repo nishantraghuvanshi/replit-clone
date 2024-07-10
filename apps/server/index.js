@@ -19,19 +19,19 @@ app.use(cors({
     origin: '*'
 }))
 
-
+//CHANGES TO MADE IN THE FILE DIRECTORY TO UPDATE IN FRONTEND.
 const shell = os.platform() === 'win32' ? 'powershell.exe' : 'bash';
 const ptyProcess = pty.spawn(shell, [], {
   name: 'xterm-color',
   cols: 90,
   rows: 30,
-  cwd: process.env.INIT_CWD + '/user',
+  cwd: process.env.INIT_CWD + '/../user',
   env: process.env
 });
 
 io.attach(server);
 
-chokidar.watch('./user').on('all', async (event, path) => {
+chokidar.watch('../user').on('all', async (event, path) => {
     io.emit('file:refresh', path);
 });
 
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
     socket.emit('file:refresh');
 
     socket.on('file:save', async ({path,content}) => {
-        await fs.writeFile(`./user${path}`, content);
+        await fs.writeFile(`../user${path}`, content);
     });
 
     socket.on('terminal:write', (data) => {
@@ -59,13 +59,13 @@ io.on('connection', (socket) => {
 
 
 app.get('/files', async (req, res) => {
-    const fileTree = await generateFileTree('./user');
+    const fileTree = await generateFileTree('../user');
     return res.json(fileTree);
 });
 
 app.get('/files/content', async (req, res) => {
     const path= req.query.path;
-    const content = await fs.readFile(`./user${path}`, 'utf-8');
+    const content = await fs.readFile(`../user${path}`, 'utf-8');
     return res.json({content});
 });
 
